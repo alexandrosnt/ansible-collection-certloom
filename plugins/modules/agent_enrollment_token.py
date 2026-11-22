@@ -15,7 +15,7 @@ description:
     with the hash of the agent CA that the agent must pin.
   - "The token is a secret. Ansible cannot hide one return value from the log
     without also hiding it from the playbook, so B(always set) C(no_log: true)
-    on the task. The R(certloom.certloom.agent role,ansible_collections.certloom.certloom.agent_role) does this for you."
+    on the task. The R(alexandrosnt.certloom.agent role,ansible_collections.alexandrosnt.certloom.agent_role) does this for you."
   - Every run creates a new token, so the task always reports a change.
     Unused tokens expire after I(ttl_seconds).
 options:
@@ -27,7 +27,7 @@ options:
     type: int
     default: 900
 extends_documentation_fragment:
-  - certloom.certloom.auth
+  - alexandrosnt.certloom.auth
 attributes:
   check_mode:
     support: full
@@ -42,7 +42,7 @@ author: certloom maintainers (@alexandrosnt)
 
 EXAMPLES = r'''
 - name: Token for this host
-  certloom.certloom.agent_enrollment_token:
+  alexandrosnt.certloom.agent_enrollment_token:
     name: "{{ inventory_hostname }}"
   delegate_to: localhost
   register: enroll
@@ -70,7 +70,7 @@ id:
 '''
 
 from ansible.module_utils.basic import AnsibleModule
-from ansible_collections.certloom.certloom.plugins.module_utils import api
+from ansible_collections.alexandrosnt.certloom.plugins.module_utils import api
 
 
 def create(module, client):

@@ -40,7 +40,7 @@ options:
     description:
       - External account binding. C(none), C(reusable) (one key ID and HMAC for
         every account) or C(single_use) (a pool of keys managed with
-        M(certloom.certloom.issuer_eab_key)).
+        M(alexandrosnt.certloom.issuer_eab_key)).
     type: str
     choices: [none, reusable, single_use]
   eab_kid:
@@ -64,8 +64,8 @@ options:
     choices: [present, absent]
     default: present
 extends_documentation_fragment:
-  - certloom.certloom.auth
-  - certloom.certloom.auth.attributes
+  - alexandrosnt.certloom.auth
+  - alexandrosnt.certloom.auth.attributes
 notes:
   - An issuer that deployments or EAB keys still use cannot be deleted.
 author: certloom maintainers (@alexandrosnt)
@@ -73,14 +73,14 @@ author: certloom maintainers (@alexandrosnt)
 
 EXAMPLES = r'''
 - name: Let's Encrypt
-  certloom.certloom.issuer:
+  alexandrosnt.certloom.issuer:
     name: letsencrypt
     directory_url: https://acme-v02.api.letsencrypt.org/directory
     email: pki@example.com
     agree_tos: true
 
 - name: Commercial CA with EAB
-  certloom.certloom.issuer:
+  alexandrosnt.certloom.issuer:
     name: commercial
     directory_url: https://acme.example-ca.com/directory
     agree_tos: true
@@ -98,7 +98,7 @@ issuer:
 '''
 
 from ansible.module_utils.basic import AnsibleModule
-from ansible_collections.certloom.certloom.plugins.module_utils import api
+from ansible_collections.alexandrosnt.certloom.plugins.module_utils import api
 
 
 def eab_body(module, current):

@@ -7,7 +7,7 @@ argument_specs:
         writes its configuration, enrolls hosts that are not enrolled yet and
         starts the systemd service.
       - The enrollment token is created on the controller with
-        M(certloom.certloom.agent_enrollment_token) and handed to the agent on
+        M(alexandrosnt.certloom.agent_enrollment_token) and handed to the agent on
         stdin; neither shows up in the log.
     author: certloom maintainers (@alexandrosnt)
     options:

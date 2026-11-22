@@ -26,8 +26,8 @@ options:
     choices: [present, absent]
     default: present
 extends_documentation_fragment:
-  - certloom.certloom.auth
-  - certloom.certloom.auth.attributes
+  - alexandrosnt.certloom.auth
+  - alexandrosnt.certloom.auth.attributes
 notes:
   - A team that still owns lineages or endpoints cannot be deleted.
 author: certloom maintainers (@alexandrosnt)
@@ -35,7 +35,7 @@ author: certloom maintainers (@alexandrosnt)
 
 EXAMPLES = r'''
 - name: Platform team
-  certloom.certloom.team:
+  alexandrosnt.certloom.team:
     name: platform
     contact: platform@example.com
 '''
@@ -49,7 +49,7 @@ team:
 '''
 
 from ansible.module_utils.basic import AnsibleModule
-from ansible_collections.certloom.certloom.plugins.module_utils import api
+from ansible_collections.alexandrosnt.certloom.plugins.module_utils import api
 
 
 def ensure(module, client):

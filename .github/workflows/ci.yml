@@ -10,7 +10,7 @@ permissions:
 
 env:
   # ansible-test needs the collection at ansible_collections/<ns>/<name>.
-  COLLECTION_DIR: ansible_collections/certloom/certloom
+  COLLECTION_DIR: ansible_collections/alexandrosnt/certloom
 
 jobs:
   sanity-units:

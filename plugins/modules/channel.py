@@ -49,8 +49,8 @@ options:
     choices: [present, absent]
     default: present
 extends_documentation_fragment:
-  - certloom.certloom.auth
-  - certloom.certloom.auth.attributes
+  - alexandrosnt.certloom.auth
+  - alexandrosnt.certloom.auth.attributes
 notes:
   - A channel named in the active policy cannot be renamed or deleted.
 author: certloom maintainers (@alexandrosnt)
@@ -58,7 +58,7 @@ author: certloom maintainers (@alexandrosnt)
 
 EXAMPLES = r'''
 - name: Alerts to the on-call webhook
-  certloom.certloom.channel:
+  alexandrosnt.certloom.channel:
     name: oncall
     kind: webhook
     config:
@@ -76,7 +76,7 @@ channel:
 '''
 
 from ansible.module_utils.basic import AnsibleModule
-from ansible_collections.certloom.certloom.plugins.module_utils import api
+from ansible_collections.alexandrosnt.certloom.plugins.module_utils import api
 
 
 def ensure(module, client):

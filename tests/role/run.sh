@@ -25,7 +25,7 @@ docker build -q -t "$image" -f "$(hostdir "$root/tests/role")/Dockerfile.$distro
 docker rm -f "$name" >/dev/null 2>&1 || true
 docker run -d --name "$name" --privileged --cgroupns=host -v /sys/fs/cgroup:/sys/fs/cgroup:rw \
 	--add-host=host.docker.internal:host-gateway \
-	-v "$(hostdir "$root"):/work/ansible_collections/certloom/certloom:ro" -v "$(hostdir "$(dirname "$package")")/$(basename "$package"):/pkg/$(basename "$package"):ro" \
+	-v "$(hostdir "$root"):/work/ansible_collections/alexandrosnt/certloom:ro" -v "$(hostdir "$(dirname "$package")")/$(basename "$package"):/pkg/$(basename "$package"):ro" \
 	"$image" >/dev/null
 trap 'docker rm -f "$name" >/dev/null 2>&1 || true' EXIT
 
@@ -37,7 +37,7 @@ run() {
 		"$name" /opt/ansible/bin/ansible-playbook -e ansible_python_interpreter=/usr/bin/python3 "$@"
 }
 
-dir=/work/ansible_collections/certloom/certloom/tests/role
+dir=/work/ansible_collections/alexandrosnt/certloom/tests/role
 run "$dir/install.yml"
 run "$dir/again.yml" | tee "$root/.testserver/again-$distro.log"
 grep -q "changed=0 " "$root/.testserver/again-$distro.log" || {

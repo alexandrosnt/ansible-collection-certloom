@@ -34,8 +34,8 @@ options:
     choices: [present, absent]
     default: present
 extends_documentation_fragment:
-  - certloom.certloom.auth
-  - certloom.certloom.auth.attributes
+  - alexandrosnt.certloom.auth
+  - alexandrosnt.certloom.auth.attributes
 notes:
   - A template that deployments still use cannot be deleted.
 author: certloom maintainers (@alexandrosnt)
@@ -43,7 +43,7 @@ author: certloom maintainers (@alexandrosnt)
 
 EXAMPLES = r'''
 - name: Web server template
-  certloom.certloom.template:
+  alexandrosnt.certloom.template:
     name: web
     document: "{{ lookup('file', 'templates/web.yaml') }}"
 '''
@@ -62,7 +62,7 @@ plan:
 import json
 
 from ansible.module_utils.basic import AnsibleModule
-from ansible_collections.certloom.certloom.plugins.module_utils import api
+from ansible_collections.alexandrosnt.certloom.plugins.module_utils import api
 
 
 def source(module):

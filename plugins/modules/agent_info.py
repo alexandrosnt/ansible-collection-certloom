@@ -17,7 +17,7 @@ options:
     description: Return only the agent with this name or id.
     type: str
 extends_documentation_fragment:
-  - certloom.certloom.auth
+  - alexandrosnt.certloom.auth
 attributes:
   check_mode:
     support: full
@@ -30,7 +30,7 @@ author: certloom maintainers (@alexandrosnt)
 
 EXAMPLES = r'''
 - name: Look up agent
-  certloom.certloom.agent_info:
+  alexandrosnt.certloom.agent_info:
     name: web-01
   register: found
 '''
@@ -45,7 +45,7 @@ agents:
 '''
 
 from ansible.module_utils.basic import AnsibleModule
-from ansible_collections.certloom.certloom.plugins.module_utils import api
+from ansible_collections.alexandrosnt.certloom.plugins.module_utils import api
 
 
 def main():

@@ -73,14 +73,14 @@ options:
     choices: [present, absent]
     default: present
 extends_documentation_fragment:
-  - certloom.certloom.auth
-  - certloom.certloom.auth.attributes
+  - alexandrosnt.certloom.auth
+  - alexandrosnt.certloom.auth.attributes
 author: certloom maintainers (@alexandrosnt)
 '''
 
 EXAMPLES = r'''
 - name: Cloudflare for example.com
-  certloom.certloom.dns_solver:
+  alexandrosnt.certloom.dns_solver:
     name: cloudflare-example
     provider: cloudflare
     zones: [example.com]
@@ -89,7 +89,7 @@ EXAMPLES = r'''
     agents: [web-01, web-02]
 
 - name: Rotate the token
-  certloom.certloom.dns_solver:
+  alexandrosnt.certloom.dns_solver:
     name: cloudflare-example
     secret:
       api_token: "{{ vault_cloudflare_dns_token_new }}"
@@ -105,7 +105,7 @@ dns_solver:
 '''
 
 from ansible.module_utils.basic import AnsibleModule
-from ansible_collections.certloom.certloom.plugins.module_utils import api
+from ansible_collections.alexandrosnt.certloom.plugins.module_utils import api
 
 FIXED = ('provider', 'plugin', 'plugin_sha256', 'zones', 'config', 'credential')
 

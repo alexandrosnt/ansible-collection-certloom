@@ -25,10 +25,10 @@ jobs:
       - name: build
         run: ansible-galaxy collection build
       - name: publish to Galaxy
-        run: ansible-galaxy collection publish certloom-certloom-*.tar.gz --api-key "$GALAXY_API_KEY"
+        run: ansible-galaxy collection publish alexandrosnt-certloom-*.tar.gz --api-key "$GALAXY_API_KEY"
         env:
           GALAXY_API_KEY: ${{ secrets.GALAXY_API_KEY }}
       - name: GitHub release
-        run: gh release create "$GITHUB_REF_NAME" certloom-certloom-*.tar.gz --title "$GITHUB_REF_NAME" --notes-file CHANGELOG.md
+        run: gh release create "$GITHUB_REF_NAME" alexandrosnt-certloom-*.tar.gz --title "$GITHUB_REF_NAME" --notes-file CHANGELOG.md
         env:
           GH_TOKEN: ${{ github.token }}

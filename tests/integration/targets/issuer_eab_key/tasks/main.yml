@@ -1,31 +1,31 @@
 ---
 - module_defaults:
-    group/certloom.certloom.certloom:
+    group/alexandrosnt.certloom.certloom:
       url: "{{ certloom_url }}"
       token: "{{ certloom_token }}"
   block:
-    - certloom.certloom.issuer:
+    - alexandrosnt.certloom.issuer:
         name: it-pool
         directory_url: https://acme.example.test/directory
         agree_tos: true
         eab_mode: single_use
 
     - name: Add a key
-      certloom.certloom.issuer_eab_key:
+      alexandrosnt.certloom.issuer_eab_key:
         issuer: it-pool
         kid: kid-a
         hmac: "{{ 'pool-integration-test-hmac' | b64encode | replace('=', '') }}"
       register: add
 
     - name: Add it again
-      certloom.certloom.issuer_eab_key:
+      alexandrosnt.certloom.issuer_eab_key:
         issuer: it-pool
         kid: kid-a
         hmac: "{{ 'pool-integration-test-hmac' | b64encode | replace('=', '') }}"
       register: again
 
     - name: Remove it
-      certloom.certloom.issuer_eab_key: {issuer: it-pool, kid: kid-a, state: absent}
+      alexandrosnt.certloom.issuer_eab_key: {issuer: it-pool, kid: kid-a, state: absent}
       register: remove
 
     - assert:
@@ -36,6 +36,6 @@
           - remove is changed
 
   always:
-    - certloom.certloom.issuer_eab_key: {issuer: it-pool, kid: kid-a, state: absent}
+    - alexandrosnt.certloom.issuer_eab_key: {issuer: it-pool, kid: kid-a, state: absent}
       ignore_errors: true
-    - certloom.certloom.issuer: {name: it-pool, state: absent}
+    - alexandrosnt.certloom.issuer: {name: it-pool, state: absent}

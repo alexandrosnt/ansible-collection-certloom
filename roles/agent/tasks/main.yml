@@ -86,7 +86,7 @@
     - certloom_agent_enroll | bool
   block:
     - name: Create an enrollment token
-      certloom.certloom.agent_enrollment_token:
+      alexandrosnt.certloom.agent_enrollment_token:
         name: "{{ certloom_agent_name }}"
         ttl_seconds: "{{ certloom_agent_token_ttl }}"
         url: "{{ certloom_agent_api_url or omit }}"

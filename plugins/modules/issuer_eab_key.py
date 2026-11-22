@@ -14,7 +14,7 @@ description:
   - Add a single-use external account binding key to an issuer's pool, or
     remove one. Each key registers one agent's ACME account and is then
     consumed.
-  - The issuer must use C(eab_mode=single_use), see M(certloom.certloom.issuer).
+  - The issuer must use C(eab_mode=single_use), see M(alexandrosnt.certloom.issuer).
   - A key that exists is left as it is. The HMAC key is never returned, so a
     key with the same I(kid) is not compared or replaced.
 options:
@@ -40,14 +40,14 @@ options:
     choices: [present, absent]
     default: present
 extends_documentation_fragment:
-  - certloom.certloom.auth
-  - certloom.certloom.auth.attributes
+  - alexandrosnt.certloom.auth
+  - alexandrosnt.certloom.auth.attributes
 author: certloom maintainers (@alexandrosnt)
 '''
 
 EXAMPLES = r'''
 - name: Fill the EAB pool
-  certloom.certloom.issuer_eab_key:
+  alexandrosnt.certloom.issuer_eab_key:
     issuer: commercial
     kid: "{{ item.kid }}"
     hmac: "{{ item.hmac }}"
@@ -65,7 +65,7 @@ key:
 '''
 
 from ansible.module_utils.basic import AnsibleModule
-from ansible_collections.certloom.certloom.plugins.module_utils import api
+from ansible_collections.alexandrosnt.certloom.plugins.module_utils import api
 
 
 def ensure(module, client):

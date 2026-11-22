@@ -47,8 +47,8 @@ options:
     choices: [present, absent]
     default: present
 extends_documentation_fragment:
-  - certloom.certloom.auth
-  - certloom.certloom.auth.attributes
+  - alexandrosnt.certloom.auth
+  - alexandrosnt.certloom.auth.attributes
 notes:
   - A scope that endpoints still use cannot be deleted.
 author: certloom maintainers (@alexandrosnt)
@@ -56,7 +56,7 @@ author: certloom maintainers (@alexandrosnt)
 
 EXAMPLES = r'''
 - name: Internal web servers
-  certloom.certloom.scope:
+  alexandrosnt.certloom.scope:
     name: internal-web
     allow_cidrs: [10.20.0.0/16]
     allow_private: true
@@ -72,7 +72,7 @@ scope:
 '''
 
 from ansible.module_utils.basic import AnsibleModule
-from ansible_collections.certloom.certloom.plugins.module_utils import api
+from ansible_collections.alexandrosnt.certloom.plugins.module_utils import api
 
 CONFIG_KEYS = ('allow_cidrs', 'allow_hosts', 'allow_loopback', 'allow_private', 'allow_link_local', 'ports')
 

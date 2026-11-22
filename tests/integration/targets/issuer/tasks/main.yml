@@ -1,6 +1,6 @@
 ---
 - module_defaults:
-    group/certloom.certloom.certloom:
+    group/alexandrosnt.certloom.certloom:
       url: "{{ certloom_url }}"
       token: "{{ certloom_token }}"
   block:
@@ -10,7 +10,7 @@
       no_log: true
 
     - name: Create
-      certloom.certloom.issuer:
+      alexandrosnt.certloom.issuer:
         name: it-issuer
         directory_url: https://acme.example.test/directory
         email: pki@example.test
@@ -18,27 +18,27 @@
       register: create
 
     - name: Create again
-      certloom.certloom.issuer: {name: it-issuer, directory_url: https://acme.example.test/directory, email: pki@example.test}
+      alexandrosnt.certloom.issuer: {name: it-issuer, directory_url: https://acme.example.test/directory, email: pki@example.test}
       register: again
 
     - name: Different directory
-      certloom.certloom.issuer: {name: it-issuer, directory_url: https://other.example.test/directory}
+      alexandrosnt.certloom.issuer: {name: it-issuer, directory_url: https://other.example.test/directory}
       register: directory
       ignore_errors: true
 
     - name: Set up EAB
-      certloom.certloom.issuer: {name: it-issuer, eab_mode: reusable, eab_kid: kid-1, eab_hmac: "{{ hmac }}"}
+      alexandrosnt.certloom.issuer: {name: it-issuer, eab_mode: reusable, eab_kid: kid-1, eab_hmac: "{{ hmac }}"}
       register: eab
 
     - name: EAB again
-      certloom.certloom.issuer: {name: it-issuer, eab_mode: reusable, eab_kid: kid-1, eab_hmac: "{{ hmac }}"}
+      alexandrosnt.certloom.issuer: {name: it-issuer, eab_mode: reusable, eab_kid: kid-1, eab_hmac: "{{ hmac }}"}
       register: eab_again
 
     - name: Rotate the HMAC
-      certloom.certloom.issuer: {name: it-issuer, eab_mode: reusable, eab_kid: kid-1, eab_hmac: "{{ hmac2 }}", update_secret: always}
+      alexandrosnt.certloom.issuer: {name: it-issuer, eab_mode: reusable, eab_kid: kid-1, eab_hmac: "{{ hmac2 }}", update_secret: always}
       register: rotate
 
-    - certloom.certloom.issuer_info: {name: it-issuer}
+    - alexandrosnt.certloom.issuer_info: {name: it-issuer}
       register: info
 
     - assert:
@@ -55,4 +55,4 @@
           - hmac not in (eab | to_json)
 
   always:
-    - certloom.certloom.issuer: {name: it-issuer, state: absent}
+    - alexandrosnt.certloom.issuer: {name: it-issuer, state: absent}

@@ -25,8 +25,8 @@ options:
     type: raw
     required: true
 extends_documentation_fragment:
-  - certloom.certloom.auth
-  - certloom.certloom.auth.attributes
+  - alexandrosnt.certloom.auth
+  - alexandrosnt.certloom.auth.attributes
 notes:
   - There is one policy per organization, so there is no I(state=absent).
 author: certloom maintainers (@alexandrosnt)
@@ -34,7 +34,7 @@ author: certloom maintainers (@alexandrosnt)
 
 EXAMPLES = r'''
 - name: Monitoring policy
-  certloom.certloom.policy:
+  alexandrosnt.certloom.policy:
     document: "{{ lookup('file', 'policy.yaml') }}"
 '''
 
@@ -52,7 +52,7 @@ plan:
 import json
 
 from ansible.module_utils.basic import AnsibleModule
-from ansible_collections.certloom.certloom.plugins.module_utils import api
+from ansible_collections.alexandrosnt.certloom.plugins.module_utils import api
 
 
 def ensure(module, client):

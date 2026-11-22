@@ -11,10 +11,10 @@
   tasks:
     - name: Install and enroll
       ansible.builtin.include_role:
-        name: certloom.certloom.agent
+        name: alexandrosnt.certloom.agent
 
     - name: Wait for the agent to report in
-      certloom.certloom.agent_info:
+      alexandrosnt.certloom.agent_info:
         name: "{{ certloom_agent_name }}"
       register: found
       until: found.agents | length == 1 and found.agents[0].last_heartbeat is defined

@@ -1,26 +1,26 @@
 ---
 - module_defaults:
-    group/certloom.certloom.certloom:
+    group/alexandrosnt.certloom.certloom:
       url: "{{ certloom_url }}"
       token: "{{ certloom_token }}"
   block:
     - name: Create
-      certloom.certloom.scope: {name: it-scope, allow_hosts: [www.example.test], ports: [443]}
+      alexandrosnt.certloom.scope: {name: it-scope, allow_hosts: [www.example.test], ports: [443]}
       register: create
 
     - name: Create again
-      certloom.certloom.scope: {name: it-scope, allow_hosts: [www.example.test], ports: [443]}
+      alexandrosnt.certloom.scope: {name: it-scope, allow_hosts: [www.example.test], ports: [443]}
       register: again
 
     - name: Allow private addresses, keep the rest
-      certloom.certloom.scope: {name: it-scope, allow_private: true}
+      alexandrosnt.certloom.scope: {name: it-scope, allow_private: true}
       register: update
 
     - name: Same again
-      certloom.certloom.scope: {name: it-scope, allow_private: true}
+      alexandrosnt.certloom.scope: {name: it-scope, allow_private: true}
       register: update_again
 
-    - certloom.certloom.scope_info: {name: it-scope}
+    - alexandrosnt.certloom.scope_info: {name: it-scope}
       register: info
 
     - assert:
@@ -33,4 +33,4 @@
           - info.scopes[0].config.allow_private
 
   always:
-    - certloom.certloom.scope: {name: it-scope, state: absent}
+    - alexandrosnt.certloom.scope: {name: it-scope, state: absent}

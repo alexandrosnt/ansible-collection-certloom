@@ -1,6 +1,6 @@
 ---
 - module_defaults:
-    group/certloom.certloom.certloom:
+    group/alexandrosnt.certloom.certloom:
       url: "{{ certloom_url }}"
       token: "{{ certloom_token }}"
   block:
@@ -14,19 +14,19 @@
     # The policy outlives the test; start from a different document so the
     # next apply is a change on every run.
     - name: Start from a known policy
-      certloom.certloom.policy:
+      alexandrosnt.certloom.policy:
         document: "{{ doc | combine({'spec': {'expiry': {'warning': '20d'}}}, recursive=true) }}"
 
     - name: Apply
-      certloom.certloom.policy: {document: "{{ doc }}"}
+      alexandrosnt.certloom.policy: {document: "{{ doc }}"}
       register: apply
 
     - name: Apply again
-      certloom.certloom.policy: {document: "{{ doc }}"}
+      alexandrosnt.certloom.policy: {document: "{{ doc }}"}
       register: again
 
     - name: Change (check mode)
-      certloom.certloom.policy:
+      alexandrosnt.certloom.policy:
         document: "{{ doc | combine({'spec': {'expiry': {'warning': '30d'}}}, recursive=true) }}"
       check_mode: true
       register: check

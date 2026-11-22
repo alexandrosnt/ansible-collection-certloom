@@ -50,8 +50,8 @@ options:
     choices: [present, absent]
     default: present
 extends_documentation_fragment:
-  - certloom.certloom.auth
-  - certloom.certloom.auth.attributes
+  - alexandrosnt.certloom.auth
+  - alexandrosnt.certloom.auth.attributes
 notes:
   - An endpoint that a deployment uses for verification cannot be deleted.
 author: certloom maintainers (@alexandrosnt)
@@ -59,7 +59,7 @@ author: certloom maintainers (@alexandrosnt)
 
 EXAMPLES = r'''
 - name: Probe the shop front end
-  certloom.certloom.endpoint:
+  alexandrosnt.certloom.endpoint:
     host: shop.example.com
     scope: public-web
     team: platform
@@ -75,7 +75,7 @@ endpoint:
 '''
 
 from ansible.module_utils.basic import AnsibleModule
-from ansible_collections.certloom.certloom.plugins.module_utils import api
+from ansible_collections.alexandrosnt.certloom.plugins.module_utils import api
 
 
 def resolve(client, kind, value):

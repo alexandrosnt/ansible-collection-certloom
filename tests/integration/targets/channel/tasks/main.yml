@@ -1,11 +1,11 @@
 ---
 - module_defaults:
-    group/certloom.certloom.certloom:
+    group/alexandrosnt.certloom.certloom:
       url: "{{ certloom_url }}"
       token: "{{ certloom_token }}"
   block:
     - name: Create
-      certloom.certloom.channel:
+      alexandrosnt.certloom.channel:
         name: it-channel
         kind: webhook
         config: {url: https://hooks.example.test/it}
@@ -13,7 +13,7 @@
       register: create
 
     - name: Create again
-      certloom.certloom.channel:
+      alexandrosnt.certloom.channel:
         name: it-channel
         kind: webhook
         config: {url: https://hooks.example.test/it}
@@ -21,11 +21,11 @@
       register: again
 
     - name: Update
-      certloom.certloom.channel: {name: it-channel, min_severity: critical, enabled: false}
+      alexandrosnt.certloom.channel: {name: it-channel, min_severity: critical, enabled: false}
       register: update
 
     - name: Change kind
-      certloom.certloom.channel: {name: it-channel, kind: email}
+      alexandrosnt.certloom.channel: {name: it-channel, kind: email}
       register: kind
       ignore_errors: true
 
@@ -40,4 +40,4 @@
           - "'cannot change' in kind.msg"
 
   always:
-    - certloom.certloom.channel: {name: it-channel, state: absent}
+    - alexandrosnt.certloom.channel: {name: it-channel, state: absent}

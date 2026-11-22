@@ -17,7 +17,7 @@ options:
     description: Return only the issuer with this name or id.
     type: str
 extends_documentation_fragment:
-  - certloom.certloom.auth
+  - alexandrosnt.certloom.auth
 attributes:
   check_mode:
     support: full
@@ -30,7 +30,7 @@ author: certloom maintainers (@alexandrosnt)
 
 EXAMPLES = r'''
 - name: Look up issuer
-  certloom.certloom.issuer_info:
+  alexandrosnt.certloom.issuer_info:
     name: letsencrypt
   register: found
 '''
@@ -45,7 +45,7 @@ issuers:
 '''
 
 from ansible.module_utils.basic import AnsibleModule
-from ansible_collections.certloom.certloom.plugins.module_utils import api
+from ansible_collections.alexandrosnt.certloom.plugins.module_utils import api
 
 
 def main():

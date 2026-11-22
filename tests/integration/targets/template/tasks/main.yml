@@ -1,10 +1,10 @@
 ---
 - module_defaults:
-    group/certloom.certloom.certloom:
+    group/alexandrosnt.certloom.certloom:
       url: "{{ certloom_url }}"
       token: "{{ certloom_token }}"
   block:
-    - certloom.certloom.issuer: {name: it-tpl-issuer, directory_url: https://acme.example.test/directory, agree_tos: true}
+    - alexandrosnt.certloom.issuer: {name: it-tpl-issuer, directory_url: https://acme.example.test/directory, agree_tos: true}
 
     - set_fact:
         doc:
@@ -18,28 +18,28 @@
             sans: {allowed: ['*.example.test'], maxNames: 5}
 
     - name: Create
-      certloom.certloom.template: {name: it-web, document: "{{ doc }}"}
+      alexandrosnt.certloom.template: {name: it-web, document: "{{ doc }}"}
       register: create
 
     - name: Create again from YAML text
-      certloom.certloom.template: {name: it-web, document: "{{ doc | to_nice_yaml }}"}
+      alexandrosnt.certloom.template: {name: it-web, document: "{{ doc | to_nice_yaml }}"}
       register: again
 
     - name: Change maxNames (check mode)
-      certloom.certloom.template:
+      alexandrosnt.certloom.template:
         name: it-web
         document: "{{ doc | combine({'spec': {'sans': {'maxNames': 8}}}, recursive=true) }}"
       check_mode: true
       register: change_check
 
     - name: Change maxNames
-      certloom.certloom.template:
+      alexandrosnt.certloom.template:
         name: it-web
         document: "{{ doc | combine({'spec': {'sans': {'maxNames': 8}}}, recursive=true) }}"
       register: change
 
     - name: Wrong name
-      certloom.certloom.template: {name: other, document: "{{ doc }}"}
+      alexandrosnt.certloom.template: {name: other, document: "{{ doc }}"}
       register: wrong
       ignore_errors: true
 
@@ -53,5 +53,5 @@
           - wrong is failed
 
   always:
-    - certloom.certloom.template: {name: it-web, state: absent}
-    - certloom.certloom.issuer: {name: it-tpl-issuer, state: absent}
+    - alexandrosnt.certloom.template: {name: it-web, state: absent}
+    - alexandrosnt.certloom.issuer: {name: it-tpl-issuer, state: absent}

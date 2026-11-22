@@ -1,21 +1,21 @@
 ---
 - module_defaults:
-    group/certloom.certloom.certloom:
+    group/alexandrosnt.certloom.certloom:
       url: "{{ certloom_url }}"
       token: "{{ certloom_token }}"
   block:
     - name: Check mode creates nothing
-      certloom.certloom.agent_enrollment_token: {name: it-agent}
+      alexandrosnt.certloom.agent_enrollment_token: {name: it-agent}
       check_mode: true
       register: check
 
     - name: Create
-      certloom.certloom.agent_enrollment_token: {name: it-agent, ttl_seconds: 300}
+      alexandrosnt.certloom.agent_enrollment_token: {name: it-agent, ttl_seconds: 300}
       register: token
       no_log: true
 
     - name: Too long
-      certloom.certloom.agent_enrollment_token: {ttl_seconds: 7200}
+      alexandrosnt.certloom.agent_enrollment_token: {ttl_seconds: 7200}
       register: long
       ignore_errors: true
 
@@ -28,7 +28,7 @@
           - token.ca_hash is match('sha256:')
           - long is failed
 
-    - certloom.certloom.agent_info: {}
+    - alexandrosnt.certloom.agent_info: {}
       register: agents
 
     - assert:

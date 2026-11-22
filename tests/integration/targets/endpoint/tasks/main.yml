@@ -1,36 +1,36 @@
 ---
 - module_defaults:
-    group/certloom.certloom.certloom:
+    group/alexandrosnt.certloom.certloom:
       url: "{{ certloom_url }}"
       token: "{{ certloom_token }}"
   block:
-    - certloom.certloom.scope: {name: it-ep-scope, allow_hosts: [www.example.test]}
-    - certloom.certloom.team: {name: it-ep-team}
+    - alexandrosnt.certloom.scope: {name: it-ep-scope, allow_hosts: [www.example.test]}
+    - alexandrosnt.certloom.team: {name: it-ep-team}
       register: team
 
     - name: Create
-      certloom.certloom.endpoint: {host: www.example.test, scope: it-ep-scope, team: it-ep-team}
+      alexandrosnt.certloom.endpoint: {host: www.example.test, scope: it-ep-scope, team: it-ep-team}
       register: create
 
     - name: Create again
-      certloom.certloom.endpoint: {host: www.example.test, scope: it-ep-scope, team: it-ep-team}
+      alexandrosnt.certloom.endpoint: {host: www.example.test, scope: it-ep-scope, team: it-ep-team}
       register: again
 
     - name: Update (check mode)
-      certloom.certloom.endpoint: {host: www.example.test, interval_seconds: 900, enabled: false}
+      alexandrosnt.certloom.endpoint: {host: www.example.test, interval_seconds: 900, enabled: false}
       check_mode: true
       register: update_check
 
     - name: Update
-      certloom.certloom.endpoint: {host: www.example.test, interval_seconds: 900, enabled: false}
+      alexandrosnt.certloom.endpoint: {host: www.example.test, interval_seconds: 900, enabled: false}
       register: update
 
     - name: Update again
-      certloom.certloom.endpoint: {host: www.example.test, interval_seconds: 900, enabled: false}
+      alexandrosnt.certloom.endpoint: {host: www.example.test, interval_seconds: 900, enabled: false}
       register: update_again
 
     - name: Remove the owner
-      certloom.certloom.endpoint: {host: www.example.test, team: ''}
+      alexandrosnt.certloom.endpoint: {host: www.example.test, team: ''}
       register: clear
 
     - assert:
@@ -48,6 +48,6 @@
           - clear.endpoint.get('team_id') is none
 
   always:
-    - certloom.certloom.endpoint: {host: www.example.test, state: absent}
-    - certloom.certloom.scope: {name: it-ep-scope, state: absent}
-    - certloom.certloom.team: {name: it-ep-team, state: absent}
+    - alexandrosnt.certloom.endpoint: {host: www.example.test, state: absent}
+    - alexandrosnt.certloom.scope: {name: it-ep-scope, state: absent}
+    - alexandrosnt.certloom.team: {name: it-ep-team, state: absent}

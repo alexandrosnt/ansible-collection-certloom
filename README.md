@@ -21,7 +21,7 @@ agents and the control plane should do.
 ## Install
 
 ```sh
-ansible-galaxy collection install certloom.certloom
+ansible-galaxy collection install alexandrosnt.certloom
 ```
 
 ## Content
@@ -48,20 +48,20 @@ Set `CERTLOOM_ENDPOINT` and `CERTLOOM_TOKEN` in the environment, or pass
 ```yaml
 - hosts: localhost
   module_defaults:
-    group/certloom.certloom.certloom:
+    group/alexandrosnt.certloom.certloom:
       url: https://certloom.example.com
       token: "{{ vault_certloom_token }}"
   tasks:
-    - certloom.certloom.team:
+    - alexandrosnt.certloom.team:
         name: platform
         contact: platform@example.com
 
-    - certloom.certloom.scope:
+    - alexandrosnt.certloom.scope:
         name: public-web
         allow_hosts: ["*.example.com"]
         ports: [443]
 
-    - certloom.certloom.endpoint:
+    - alexandrosnt.certloom.endpoint:
         host: shop.example.com
         scope: public-web
         team: platform
@@ -89,7 +89,7 @@ task. The `agent` role does this for you.
 - hosts: webservers
   become: true
   roles:
-    - role: certloom.certloom.agent
+    - role: alexandrosnt.certloom.agent
       vars:
         certloom_agent_server: https://certloom.example.com:8444
         certloom_agent_package_url: https://downloads.example.com/certloom-agent_1.0.0-1_amd64.deb
@@ -118,7 +118,7 @@ Tested on Debian 13, Ubuntu 24.04 and Rocky Linux 9. Other Debian and Red Hat
 family releases with systemd should work. Windows hosts are not covered by the
 role yet.
 
-See `ansible-doc -t role certloom.certloom.agent` for all variables.
+See `ansible-doc -t role alexandrosnt.certloom.agent` for all variables.
 
 ## Development
 
@@ -135,7 +135,7 @@ scripts/testserver.sh stop
 ```
 
 `ansible-test` expects the collection at
-`ansible_collections/certloom/certloom` in a directory on the collections
+`ansible_collections/alexandrosnt/certloom` in a directory on the collections
 path.
 
 Changes need a changelog fragment in `changelogs/fragments/`, see

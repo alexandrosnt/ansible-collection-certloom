@@ -1,28 +1,28 @@
 ---
 - module_defaults:
-    group/certloom.certloom.certloom:
+    group/alexandrosnt.certloom.certloom:
       url: "{{ certloom_url }}"
       token: "{{ certloom_token }}"
   block:
     - name: Create (check mode)
-      certloom.certloom.team: {name: it-team, contact: a@example.test}
+      alexandrosnt.certloom.team: {name: it-team, contact: a@example.test}
       check_mode: true
       register: check
 
     - name: Create
-      certloom.certloom.team: {name: it-team, contact: a@example.test}
+      alexandrosnt.certloom.team: {name: it-team, contact: a@example.test}
       register: create
 
     - name: Create again
-      certloom.certloom.team: {name: it-team, contact: a@example.test}
+      alexandrosnt.certloom.team: {name: it-team, contact: a@example.test}
       register: again
 
     - name: Update contact
-      certloom.certloom.team: {name: it-team, contact: b@example.test}
+      alexandrosnt.certloom.team: {name: it-team, contact: b@example.test}
       register: update
 
     - name: Look it up
-      certloom.certloom.team_info: {name: it-team}
+      alexandrosnt.certloom.team_info: {name: it-team}
       register: info
 
     - assert:
@@ -38,11 +38,11 @@
 
   always:
     - name: Delete
-      certloom.certloom.team: {name: it-team, state: absent}
+      alexandrosnt.certloom.team: {name: it-team, state: absent}
       register: delete
 
     - name: Delete again
-      certloom.certloom.team: {name: it-team, state: absent}
+      alexandrosnt.certloom.team: {name: it-team, state: absent}
       register: delete_again
 
     - assert:

@@ -1,6 +1,6 @@
 ---
 - module_defaults:
-    group/certloom.certloom.certloom:
+    group/alexandrosnt.certloom.certloom:
       url: "{{ certloom_url }}"
       token: "{{ certloom_token }}"
   block:
@@ -9,7 +9,7 @@
       no_log: true
 
     - name: Create
-      certloom.certloom.dns_solver:
+      alexandrosnt.certloom.dns_solver:
         name: it-solver
         provider: rfc2136
         zones: [example.test]
@@ -18,7 +18,7 @@
       register: create
 
     - name: Create again
-      certloom.certloom.dns_solver:
+      alexandrosnt.certloom.dns_solver:
         name: it-solver
         provider: rfc2136
         zones: [example.test]
@@ -28,11 +28,11 @@
       register: again
 
     - name: Rotate the secret
-      certloom.certloom.dns_solver: {name: it-solver, secret: {tsig_key: "{{ tsig }}"}, update_secret: always}
+      alexandrosnt.certloom.dns_solver: {name: it-solver, secret: {tsig_key: "{{ tsig }}"}, update_secret: always}
       register: rotate
 
     - name: Change zones
-      certloom.certloom.dns_solver: {name: it-solver, zones: [other.test]}
+      alexandrosnt.certloom.dns_solver: {name: it-solver, zones: [other.test]}
       register: zones
       ignore_errors: true
 
@@ -46,4 +46,4 @@
           - "'zones' in zones.msg"
 
   always:
-    - certloom.certloom.dns_solver: {name: it-solver, state: absent}
+    - alexandrosnt.certloom.dns_solver: {name: it-solver, state: absent}

@@ -9,7 +9,7 @@ import json
 
 import pytest
 
-from ansible_collections.certloom.certloom.plugins.module_utils import api
+from ansible_collections.alexandrosnt.certloom.plugins.module_utils import api
 
 
 class FakeResponse:
