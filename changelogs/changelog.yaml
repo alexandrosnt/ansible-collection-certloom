@@ -1,6 +1,6 @@
 ancestor: null
 releases:
-  0.1.0:
+  0.1.1:
     changes:
       release_summary: First release. Modules for teams, probe scopes, endpoints,
         notification channels, ACME issuers (with EAB), single-use EAB keys, central

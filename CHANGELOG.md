@@ -2,12 +2,12 @@
 
 **Topics**
 
-- <a href="#v0-1-0">v0\.1\.0</a>
+- <a href="#v0-1-1">v0\.1\.1</a>
     - <a href="#release-summary">Release Summary</a>
     - <a href="#new-modules">New Modules</a>
 
-<a id="v0-1-0"></a>
-## v0\.1\.0
+<a id="v0-1-1"></a>
+## v0\.1\.1
 
 <a id="release-summary"></a>
 ### Release Summary
