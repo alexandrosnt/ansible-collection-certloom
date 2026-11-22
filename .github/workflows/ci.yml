@@ -57,6 +57,7 @@ jobs:
       - uses: actions/setup-go@v7
         with:
           go-version-file: certloom/go.mod
+          cache-dependency-path: certloom/go.sum
       - uses: actions/setup-python@v7
         with:
           python-version: "3.13"
@@ -101,6 +102,7 @@ jobs:
       - uses: actions/setup-go@v7
         with:
           go-version-file: .certloom/go.mod
+          cache-dependency-path: .certloom/go.sum
       - name: build agent packages
         run: VERSION=0.0.0-ci .certloom/deploy/packaging/build.sh
       - name: start certloomd
