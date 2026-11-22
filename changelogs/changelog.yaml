@@ -1,0 +1,55 @@
+ancestor: null
+releases:
+  0.1.0:
+    changes:
+      release_summary: First release. Modules for teams, probe scopes, endpoints,
+        notification channels, ACME issuers (with EAB), single-use EAB keys, central
+        DNS-01 solvers, certificate templates and the monitoring policy, info modules,
+        agent enrollment tokens, and the agent role for Debian and Red Hat family
+        hosts.
+    fragments:
+    - 0.1.0.yml
+    modules:
+    - description: Create a one\-time certloom agent enrollment token.
+      name: agent_enrollment_token
+      namespace: ''
+    - description: List certloom enrolled agents.
+      name: agent_info
+      namespace: ''
+    - description: Manage certloom notification channels.
+      name: channel
+      namespace: ''
+    - description: Manage central certloom DNS\-01 solvers.
+      name: dns_solver
+      namespace: ''
+    - description: Manage TLS endpoints that certloom probes.
+      name: endpoint
+      namespace: ''
+    - description: Manage certloom ACME issuers.
+      name: issuer
+      namespace: ''
+    - description: Manage single\-use EAB keys of a certloom issuer.
+      name: issuer_eab_key
+      namespace: ''
+    - description: List certloom ACME issuers.
+      name: issuer_info
+      namespace: ''
+    - description: Apply the certloom monitoring policy.
+      name: policy
+      namespace: ''
+    - description: Manage certloom probe scopes.
+      name: scope
+      namespace: ''
+    - description: List certloom probe scopes.
+      name: scope_info
+      namespace: ''
+    - description: Manage certloom teams.
+      name: team
+      namespace: ''
+    - description: List certloom teams.
+      name: team_info
+      namespace: ''
+    - description: Manage certloom certificate templates.
+      name: template
+      namespace: ''
+    release_date: '2026-11-22'

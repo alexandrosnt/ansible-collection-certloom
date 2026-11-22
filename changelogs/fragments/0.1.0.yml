@@ -1,7 +1,0 @@
----
-release_summary: >-
-  First release. Modules for teams, probe scopes, endpoints, notification
-  channels, ACME issuers (with EAB), single-use EAB keys, central DNS-01
-  solvers, certificate templates and the monitoring policy, info modules,
-  agent enrollment tokens, and the agent role for Debian and Red Hat family
-  hosts.
