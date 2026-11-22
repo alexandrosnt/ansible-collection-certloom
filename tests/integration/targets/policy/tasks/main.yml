@@ -1,0 +1,40 @@
+---
+- module_defaults:
+    group/certloom.certloom.certloom:
+      url: "{{ certloom_url }}"
+      token: "{{ certloom_token }}"
+  block:
+    - set_fact:
+        doc:
+          apiVersion: certloom/v1
+          kind: MonitoringPolicy
+          spec:
+            expiry: {warning: 21d, critical: 7d}
+
+    # The policy outlives the test; start from a different document so the
+    # next apply is a change on every run.
+    - name: Start from a known policy
+      certloom.certloom.policy:
+        document: "{{ doc | combine({'spec': {'expiry': {'warning': '20d'}}}, recursive=true) }}"
+
+    - name: Apply
+      certloom.certloom.policy: {document: "{{ doc }}"}
+      register: apply
+
+    - name: Apply again
+      certloom.certloom.policy: {document: "{{ doc }}"}
+      register: again
+
+    - name: Change (check mode)
+      certloom.certloom.policy:
+        document: "{{ doc | combine({'spec': {'expiry': {'warning': '30d'}}}, recursive=true) }}"
+      check_mode: true
+      register: check
+
+    - assert:
+        that:
+          - apply is changed
+          - apply.plan.applied
+          - again is not changed
+          - check is changed
+          - not check.plan.applied

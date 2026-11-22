@@ -1,0 +1,25 @@
+namespace: certloom
+name: certloom
+version: 0.1.0
+readme: README.md
+authors:
+  - certloom contributors
+description: Manage certloom configuration and roll out certloom-agent.
+license:
+  - Apache-2.0
+tags:
+  - certificates
+  - pki
+  - tls
+  - acme
+  - security
+dependencies: {}
+repository: https://github.com/alexandrosnt/ansible-collection-certloom
+documentation: https://github.com/alexandrosnt/ansible-collection-certloom#readme
+issues: https://github.com/alexandrosnt/ansible-collection-certloom/issues
+build_ignore:
+  - .github
+  - .testserver
+  - tests/output
+  - tests/integration/integration_config.yml
+  - '*.tar.gz'

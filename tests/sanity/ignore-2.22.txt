@@ -1,0 +1,14 @@
+plugins/modules/agent_enrollment_token.py validate-modules:missing-gplv3-license # Apache-2.0, like the rest of certloom
+plugins/modules/agent_info.py validate-modules:missing-gplv3-license # Apache-2.0, like the rest of certloom
+plugins/modules/channel.py validate-modules:missing-gplv3-license # Apache-2.0, like the rest of certloom
+plugins/modules/dns_solver.py validate-modules:missing-gplv3-license # Apache-2.0, like the rest of certloom
+plugins/modules/endpoint.py validate-modules:missing-gplv3-license # Apache-2.0, like the rest of certloom
+plugins/modules/issuer.py validate-modules:missing-gplv3-license # Apache-2.0, like the rest of certloom
+plugins/modules/issuer_eab_key.py validate-modules:missing-gplv3-license # Apache-2.0, like the rest of certloom
+plugins/modules/issuer_info.py validate-modules:missing-gplv3-license # Apache-2.0, like the rest of certloom
+plugins/modules/policy.py validate-modules:missing-gplv3-license # Apache-2.0, like the rest of certloom
+plugins/modules/scope.py validate-modules:missing-gplv3-license # Apache-2.0, like the rest of certloom
+plugins/modules/scope_info.py validate-modules:missing-gplv3-license # Apache-2.0, like the rest of certloom
+plugins/modules/team.py validate-modules:missing-gplv3-license # Apache-2.0, like the rest of certloom
+plugins/modules/team_info.py validate-modules:missing-gplv3-license # Apache-2.0, like the rest of certloom
+plugins/modules/template.py validate-modules:missing-gplv3-license # Apache-2.0, like the rest of certloom

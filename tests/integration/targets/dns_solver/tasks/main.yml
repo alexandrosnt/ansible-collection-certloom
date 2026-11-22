@@ -1,0 +1,49 @@
+---
+- module_defaults:
+    group/certloom.certloom.certloom:
+      url: "{{ certloom_url }}"
+      token: "{{ certloom_token }}"
+  block:
+    - set_fact:
+        tsig: "key \"it.\" { algorithm hmac-sha256; secret \"{{ 'dns-solver-integration' | b64encode }}\"; };"
+      no_log: true
+
+    - name: Create
+      certloom.certloom.dns_solver:
+        name: it-solver
+        provider: rfc2136
+        zones: [example.test]
+        config: {nameserver: '127.0.0.1:53'}
+        secret: {tsig_key: "{{ tsig }}"}
+      register: create
+
+    - name: Create again
+      certloom.certloom.dns_solver:
+        name: it-solver
+        provider: rfc2136
+        zones: [example.test]
+        config: {nameserver: '127.0.0.1:53'}
+        secret: {tsig_key: "{{ tsig }}"}
+        agents: []
+      register: again
+
+    - name: Rotate the secret
+      certloom.certloom.dns_solver: {name: it-solver, secret: {tsig_key: "{{ tsig }}"}, update_secret: always}
+      register: rotate
+
+    - name: Change zones
+      certloom.certloom.dns_solver: {name: it-solver, zones: [other.test]}
+      register: zones
+      ignore_errors: true
+
+    - assert:
+        that:
+          - create is changed
+          - create.dns_solver.has_secret
+          - again is not changed
+          - rotate is changed
+          - zones is failed
+          - "'zones' in zones.msg"
+
+  always:
+    - certloom.certloom.dns_solver: {name: it-solver, state: absent}

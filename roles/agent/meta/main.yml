@@ -1,0 +1,14 @@
+---
+galaxy_info:
+  author: certloom maintainers
+  description: Install, configure and enroll certloom-agent
+  license: Apache-2.0
+  min_ansible_version: "2.20"
+  platforms:
+    - name: Debian
+      versions: [trixie]
+    - name: Ubuntu
+      versions: [noble]
+    - name: EL
+      versions: ["9"]
+dependencies: []

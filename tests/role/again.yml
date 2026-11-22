@@ -1,0 +1,11 @@
+---
+# Second run of the role on an installed, enrolled host: must change nothing.
+- hosts: localhost
+  connection: local
+  vars:
+    certloom_agent_server: "{{ lookup('env', 'AGENT_SERVER') }}"
+    certloom_agent_package_file: "{{ lookup('env', 'AGENT_PACKAGE') }}"
+    certloom_agent_package_sha256: "{{ lookup('env', 'AGENT_PACKAGE_SHA256') }}"
+    certloom_agent_name: "{{ lookup('env', 'AGENT_NAME') }}"
+  roles:
+    - certloom.certloom.agent

@@ -1,0 +1,26 @@
+---
+# Runs inside the target container (connection local): installs, enrolls
+# and starts the agent. again.yml then checks a second run changes nothing.
+- hosts: localhost
+  connection: local
+  vars:
+    certloom_agent_server: "{{ lookup('env', 'AGENT_SERVER') }}"
+    certloom_agent_package_file: "{{ lookup('env', 'AGENT_PACKAGE') }}"
+    certloom_agent_package_sha256: "{{ lookup('env', 'AGENT_PACKAGE_SHA256') }}"
+    certloom_agent_name: "{{ lookup('env', 'AGENT_NAME') }}"
+  tasks:
+    - name: Install and enroll
+      ansible.builtin.include_role:
+        name: certloom.certloom.agent
+
+    - name: Wait for the agent to report in
+      certloom.certloom.agent_info:
+        name: "{{ certloom_agent_name }}"
+      register: found
+      until: found.agents | length == 1 and found.agents[0].last_heartbeat is defined
+      retries: 30
+      delay: 2
+
+    - name: Service is running
+      ansible.builtin.command: systemctl is-active certloom-agent
+      changed_when: false

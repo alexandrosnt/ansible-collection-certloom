@@ -1,0 +1,113 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+env:
+  # ansible-test needs the collection at ansible_collections/<ns>/<name>.
+  COLLECTION_DIR: ansible_collections/certloom/certloom
+
+jobs:
+  sanity-units:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        ansible: ["2.20", "2.21", "2.22"]
+    name: sanity + units (ansible-core ${{ matrix.ansible }})
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          path: ${{ env.COLLECTION_DIR }}
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - run: pip install "ansible-core~=${{ matrix.ansible }}.0"
+      - name: sanity
+        working-directory: ${{ env.COLLECTION_DIR }}
+        run: ansible-test sanity --requirements --python 3.13 -v
+      - name: units
+        working-directory: ${{ env.COLLECTION_DIR }}
+        run: ansible-test units --requirements --python 3.13 -v
+
+  # Integration tests and the secret scan against a real certloomd built from
+  # the certloom repository.
+  integration:
+    needs: sanity-units
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        ansible: ["2.20", "2.22"]
+    name: integration (ansible-core ${{ matrix.ansible }})
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          path: ${{ env.COLLECTION_DIR }}
+      - uses: actions/checkout@v7
+        with:
+          repository: alexandrosnt/certloom
+          path: certloom
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: certloom/go.mod
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - run: pip install "ansible-core~=${{ matrix.ansible }}.0"
+      - name: start certloomd
+        working-directory: ${{ env.COLLECTION_DIR }}
+        run: CERTLOOM_SRC=$GITHUB_WORKSPACE/certloom scripts/testserver.sh start
+      - name: integration
+        working-directory: ${{ env.COLLECTION_DIR }}
+        run: ansible-test integration --python 3.13 -v
+      - name: secret scan
+        working-directory: ${{ env.COLLECTION_DIR }}
+        run: |
+          . .testserver/env
+          ANSIBLE_COLLECTIONS_PATH=$GITHUB_WORKSPACE tests/secrets/run.sh
+      - if: failure()
+        working-directory: ${{ env.COLLECTION_DIR }}
+        run: cat .testserver/certloomd.log
+
+  # The agent role on systemd containers, with packages built from certloom.
+  role:
+    needs: sanity-units
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - distro: debian
+            package: certloom-agent_*_amd64.deb
+          - distro: ubuntu
+            package: certloom-agent_*_amd64.deb
+          - distro: rocky
+            package: certloom-agent-*.x86_64.rpm
+    name: role (${{ matrix.distro }})
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/checkout@v7
+        with:
+          repository: alexandrosnt/certloom
+          path: .certloom
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: .certloom/go.mod
+      - name: build agent packages
+        run: VERSION=0.0.0-ci .certloom/deploy/packaging/build.sh
+      - name: start certloomd
+        run: |
+          TESTSERVER_LISTEN=0.0.0.0 TESTSERVER_HOST=host.docker.internal \
+            CERTLOOM_SRC=$PWD/.certloom scripts/testserver.sh start
+      - name: role test
+        run: tests/role/run.sh ${{ matrix.distro }} .certloom/dist/${{ matrix.package }}
+      - if: failure()
+        run: cat .testserver/certloomd.log

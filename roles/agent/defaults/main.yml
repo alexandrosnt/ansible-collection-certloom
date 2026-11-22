@@ -1,0 +1,32 @@
+---
+# Package to install: a URL (downloaded on the host) or a file on the
+# controller. The SHA-256 checksum is required either way.
+certloom_agent_package_url: ""
+certloom_agent_package_file: ""
+certloom_agent_package_sha256: ""
+# certloom packages are not signed yet, so the checksum above is what vouches
+# for the file. Turn this on for packages signed with a key dnf trusts.
+certloom_agent_package_gpg_check: false
+
+# Agent listener of the certloom server, for example
+# https://certloom.example.com:8444.
+certloom_agent_server: ""
+certloom_agent_name: "{{ inventory_hostname }}"
+
+# Merged into config.yaml on top of server, name and state_dir: targets,
+# dns_solvers, cloud, allowed_tasks and so on (see docs/runbooks/agent.md).
+certloom_agent_config: {}
+
+certloom_agent_config_path: /etc/certloom-agent/config.yaml
+certloom_agent_state_dir: /var/lib/certloom-agent
+
+# Enroll hosts that are not enrolled yet. The token is created on the
+# controller with the certloom API; url and token default to the
+# CERTLOOM_ENDPOINT and CERTLOOM_TOKEN environment variables there.
+certloom_agent_enroll: true
+certloom_agent_api_url: ""
+certloom_agent_api_token: ""
+certloom_agent_api_ca_path: ""
+certloom_agent_token_ttl: 900
+
+certloom_agent_service_enabled: true

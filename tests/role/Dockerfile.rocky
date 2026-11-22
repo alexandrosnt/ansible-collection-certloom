@@ -1,0 +1,7 @@
+FROM rockylinux/rockylinux:9
+# ansible-core 2.22 needs Python 3.13 on the controller; EL9 ships 3.12.
+ARG ANSIBLE_CORE=2.21.6
+RUN dnf -y install systemd python3.12 python3.12-pip && dnf clean all \
+    && python3.12 -m venv /opt/ansible && /opt/ansible/bin/pip install --no-cache-dir "ansible-core==$ANSIBLE_CORE"
+STOPSIGNAL SIGRTMIN+3
+CMD ["/sbin/init"]

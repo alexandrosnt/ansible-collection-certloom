@@ -1,0 +1,6 @@
+---
+- name: Restart certloom-agent
+  ansible.builtin.systemd_service:
+    name: certloom-agent
+    state: restarted
+  when: certloom_agent_enrolled | default(false)

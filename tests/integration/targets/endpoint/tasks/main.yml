@@ -1,0 +1,53 @@
+---
+- module_defaults:
+    group/certloom.certloom.certloom:
+      url: "{{ certloom_url }}"
+      token: "{{ certloom_token }}"
+  block:
+    - certloom.certloom.scope: {name: it-ep-scope, allow_hosts: [www.example.test]}
+    - certloom.certloom.team: {name: it-ep-team}
+      register: team
+
+    - name: Create
+      certloom.certloom.endpoint: {host: www.example.test, scope: it-ep-scope, team: it-ep-team}
+      register: create
+
+    - name: Create again
+      certloom.certloom.endpoint: {host: www.example.test, scope: it-ep-scope, team: it-ep-team}
+      register: again
+
+    - name: Update (check mode)
+      certloom.certloom.endpoint: {host: www.example.test, interval_seconds: 900, enabled: false}
+      check_mode: true
+      register: update_check
+
+    - name: Update
+      certloom.certloom.endpoint: {host: www.example.test, interval_seconds: 900, enabled: false}
+      register: update
+
+    - name: Update again
+      certloom.certloom.endpoint: {host: www.example.test, interval_seconds: 900, enabled: false}
+      register: update_again
+
+    - name: Remove the owner
+      certloom.certloom.endpoint: {host: www.example.test, team: ''}
+      register: clear
+
+    - assert:
+        that:
+          - create is changed
+          - create.endpoint.team_id == team.team.id
+          - again is not changed
+          - update_check is changed
+          - update_check.endpoint.interval_seconds == 900
+          - update is changed
+          - update.endpoint.interval_seconds == 900
+          - not update.endpoint.enabled
+          - update_again is not changed
+          - clear is changed
+          - clear.endpoint.get('team_id') is none
+
+  always:
+    - certloom.certloom.endpoint: {host: www.example.test, state: absent}
+    - certloom.certloom.scope: {name: it-ep-scope, state: absent}
+    - certloom.certloom.team: {name: it-ep-team, state: absent}

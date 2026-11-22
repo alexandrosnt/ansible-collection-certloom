@@ -1,0 +1,57 @@
+---
+- module_defaults:
+    group/certloom.certloom.certloom:
+      url: "{{ certloom_url }}"
+      token: "{{ certloom_token }}"
+  block:
+    - certloom.certloom.issuer: {name: it-tpl-issuer, directory_url: https://acme.example.test/directory, agree_tos: true}
+
+    - set_fact:
+        doc:
+          apiVersion: certloom/v1
+          kind: CertificateTemplate
+          metadata: {name: it-web}
+          spec:
+            issuer: it-tpl-issuer
+            challenge: http-01
+            keyAlgorithms: [ecdsa-p256]
+            sans: {allowed: ['*.example.test'], maxNames: 5}
+
+    - name: Create
+      certloom.certloom.template: {name: it-web, document: "{{ doc }}"}
+      register: create
+
+    - name: Create again from YAML text
+      certloom.certloom.template: {name: it-web, document: "{{ doc | to_nice_yaml }}"}
+      register: again
+
+    - name: Change maxNames (check mode)
+      certloom.certloom.template:
+        name: it-web
+        document: "{{ doc | combine({'spec': {'sans': {'maxNames': 8}}}, recursive=true) }}"
+      check_mode: true
+      register: change_check
+
+    - name: Change maxNames
+      certloom.certloom.template:
+        name: it-web
+        document: "{{ doc | combine({'spec': {'sans': {'maxNames': 8}}}, recursive=true) }}"
+      register: change
+
+    - name: Wrong name
+      certloom.certloom.template: {name: other, document: "{{ doc }}"}
+      register: wrong
+      ignore_errors: true
+
+    - assert:
+        that:
+          - create is changed
+          - again is not changed
+          - change_check is changed
+          - change is changed
+          - change.template.version == create.template.version + 1
+          - wrong is failed
+
+  always:
+    - certloom.certloom.template: {name: it-web, state: absent}
+    - certloom.certloom.issuer: {name: it-tpl-issuer, state: absent}

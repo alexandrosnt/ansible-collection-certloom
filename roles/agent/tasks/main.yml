@@ -1,0 +1,125 @@
+---
+- name: Check the role variables
+  ansible.builtin.assert:
+    that:
+      - certloom_agent_server is match('https://')
+      - certloom_agent_package_url != '' or certloom_agent_package_file != ''
+      - certloom_agent_package_sha256 is match('^[0-9a-f]{64}$')
+      - ansible_facts.os_family in ['Debian', 'RedHat']
+    fail_msg: >-
+      Set certloom_agent_server (https URL of the agent listener), one of
+      certloom_agent_package_url or certloom_agent_package_file, and
+      certloom_agent_package_sha256. Only Debian and Red Hat family hosts
+      are supported.
+    quiet: true
+
+- name: Pick the package format
+  ansible.builtin.set_fact:
+    certloom_agent_package_path: >-
+      /var/cache/certloom-agent/certloom-agent.{{ 'deb' if ansible_facts.os_family == 'Debian' else 'rpm' }}
+
+- name: Create the package cache directory
+  ansible.builtin.file:
+    path: /var/cache/certloom-agent
+    state: directory
+    mode: '0700'
+
+- name: Download the package
+  ansible.builtin.get_url:
+    url: "{{ certloom_agent_package_url }}"
+    dest: "{{ certloom_agent_package_path }}"
+    checksum: "sha256:{{ certloom_agent_package_sha256 }}"
+    mode: '0600'
+  when: certloom_agent_package_url != ''
+
+- name: Copy the package
+  when: certloom_agent_package_url == ''
+  block:
+    - name: Copy the package from the controller
+      ansible.builtin.copy:
+        src: "{{ certloom_agent_package_file }}"
+        dest: "{{ certloom_agent_package_path }}"
+        mode: '0600'
+
+    - name: Read the package checksum
+      ansible.builtin.stat:
+        path: "{{ certloom_agent_package_path }}"
+        checksum_algorithm: sha256
+      register: certloom_agent_package_stat
+
+    - name: Compare the package checksum
+      ansible.builtin.assert:
+        that: certloom_agent_package_stat.stat.checksum == certloom_agent_package_sha256
+        fail_msg: "{{ certloom_agent_package_file }} does not match certloom_agent_package_sha256"
+        quiet: true
+
+- name: Install the package (deb)
+  ansible.builtin.apt:
+    deb: "{{ certloom_agent_package_path }}"
+  when: ansible_facts.os_family == 'Debian'
+
+- name: Install the package (rpm)
+  ansible.builtin.dnf:
+    name: "{{ certloom_agent_package_path }}"
+    state: present
+    disable_gpg_check: "{{ not (certloom_agent_package_gpg_check | bool) }}"
+  when: ansible_facts.os_family == 'RedHat'
+
+- name: Write the agent configuration
+  ansible.builtin.template:
+    src: config.yaml.j2
+    dest: "{{ certloom_agent_config_path }}"
+    owner: root
+    group: root
+    mode: '0640'
+    validate: certloom-agent check-config --config %s
+  notify: Restart certloom-agent
+
+- name: Check whether the agent is enrolled
+  ansible.builtin.stat:
+    path: "{{ certloom_agent_state_dir }}/agent.json"
+  register: certloom_agent_identity
+
+- name: Enroll the agent
+  when:
+    - not certloom_agent_identity.stat.exists
+    - certloom_agent_enroll | bool
+  block:
+    - name: Create an enrollment token
+      certloom.certloom.agent_enrollment_token:
+        name: "{{ certloom_agent_name }}"
+        ttl_seconds: "{{ certloom_agent_token_ttl }}"
+        url: "{{ certloom_agent_api_url or omit }}"
+        token: "{{ certloom_agent_api_token or omit }}"
+        ca_path: "{{ certloom_agent_api_ca_path or omit }}"
+      delegate_to: localhost
+      become: false
+      register: certloom_agent_token
+      no_log: true
+
+    # The token goes in on stdin so it never shows up in the process list.
+    - name: Enroll with the token
+      ansible.builtin.command:
+        argv:
+          - certloom-agent
+          - enroll
+          - --config
+          - "{{ certloom_agent_config_path }}"
+          - --ca-hash
+          - "{{ certloom_agent_token.ca_hash }}"
+        stdin: "{{ certloom_agent_token.token }}"
+      changed_when: true
+      no_log: true
+      when: not ansible_check_mode
+
+- name: Record the enrollment state
+  ansible.builtin.set_fact:
+    certloom_agent_enrolled: >-
+      {{ certloom_agent_identity.stat.exists or (certloom_agent_enroll | bool and not ansible_check_mode) }}
+
+- name: Start the agent
+  ansible.builtin.systemd_service:
+    name: certloom-agent
+    enabled: "{{ certloom_agent_service_enabled }}"
+    state: "{{ 'started' if certloom_agent_service_enabled else 'stopped' }}"
+  when: certloom_agent_enrolled | bool

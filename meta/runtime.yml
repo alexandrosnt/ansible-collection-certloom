@@ -1,0 +1,18 @@
+---
+requires_ansible: '>=2.20.0'
+action_groups:
+  certloom:
+    - agent_enrollment_token
+    - agent_info
+    - channel
+    - dns_solver
+    - endpoint
+    - issuer
+    - issuer_eab_key
+    - issuer_info
+    - policy
+    - scope
+    - scope_info
+    - team
+    - team_info
+    - template

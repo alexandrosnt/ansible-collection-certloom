@@ -1,0 +1,43 @@
+---
+- module_defaults:
+    group/certloom.certloom.certloom:
+      url: "{{ certloom_url }}"
+      token: "{{ certloom_token }}"
+  block:
+    - name: Create
+      certloom.certloom.channel:
+        name: it-channel
+        kind: webhook
+        config: {url: https://hooks.example.test/it}
+        min_severity: warning
+      register: create
+
+    - name: Create again
+      certloom.certloom.channel:
+        name: it-channel
+        kind: webhook
+        config: {url: https://hooks.example.test/it}
+        min_severity: warning
+      register: again
+
+    - name: Update
+      certloom.certloom.channel: {name: it-channel, min_severity: critical, enabled: false}
+      register: update
+
+    - name: Change kind
+      certloom.certloom.channel: {name: it-channel, kind: email}
+      register: kind
+      ignore_errors: true
+
+    - assert:
+        that:
+          - create is changed
+          - again is not changed
+          - update is changed
+          - update.channel.min_severity == 'critical'
+          - not update.channel.enabled
+          - kind is failed
+          - "'cannot change' in kind.msg"
+
+  always:
+    - certloom.certloom.channel: {name: it-channel, state: absent}

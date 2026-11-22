@@ -1,0 +1,2 @@
+# Managed by Ansible (certloom.certloom.agent role). Local changes are overwritten.
+{{ ({'server': certloom_agent_server, 'name': certloom_agent_name, 'state_dir': certloom_agent_state_dir} | combine(certloom_agent_config, recursive=true)) | to_nice_yaml(indent=2, sort_keys=false) }}

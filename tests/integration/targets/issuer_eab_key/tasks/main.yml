@@ -1,0 +1,41 @@
+---
+- module_defaults:
+    group/certloom.certloom.certloom:
+      url: "{{ certloom_url }}"
+      token: "{{ certloom_token }}"
+  block:
+    - certloom.certloom.issuer:
+        name: it-pool
+        directory_url: https://acme.example.test/directory
+        agree_tos: true
+        eab_mode: single_use
+
+    - name: Add a key
+      certloom.certloom.issuer_eab_key:
+        issuer: it-pool
+        kid: kid-a
+        hmac: "{{ 'pool-integration-test-hmac' | b64encode | replace('=', '') }}"
+      register: add
+
+    - name: Add it again
+      certloom.certloom.issuer_eab_key:
+        issuer: it-pool
+        kid: kid-a
+        hmac: "{{ 'pool-integration-test-hmac' | b64encode | replace('=', '') }}"
+      register: again
+
+    - name: Remove it
+      certloom.certloom.issuer_eab_key: {issuer: it-pool, kid: kid-a, state: absent}
+      register: remove
+
+    - assert:
+        that:
+          - add is changed
+          - add.key.state == 'available'
+          - again is not changed
+          - remove is changed
+
+  always:
+    - certloom.certloom.issuer_eab_key: {issuer: it-pool, kid: kid-a, state: absent}
+      ignore_errors: true
+    - certloom.certloom.issuer: {name: it-pool, state: absent}

@@ -1,0 +1,49 @@
+---
+- module_defaults:
+    group/certloom.certloom.certloom:
+      url: "{{ certloom_url }}"
+      token: "{{ certloom_token }}"
+  block:
+    - name: Create (check mode)
+      certloom.certloom.team: {name: it-team, contact: a@example.test}
+      check_mode: true
+      register: check
+
+    - name: Create
+      certloom.certloom.team: {name: it-team, contact: a@example.test}
+      register: create
+
+    - name: Create again
+      certloom.certloom.team: {name: it-team, contact: a@example.test}
+      register: again
+
+    - name: Update contact
+      certloom.certloom.team: {name: it-team, contact: b@example.test}
+      register: update
+
+    - name: Look it up
+      certloom.certloom.team_info: {name: it-team}
+      register: info
+
+    - assert:
+        that:
+          - check is changed
+          - create is changed
+          - create.team.id is defined
+          - again is not changed
+          - update is changed
+          - update.team.contact == 'b@example.test'
+          - info.teams | length == 1
+          - info.teams[0].id == create.team.id
+
+  always:
+    - name: Delete
+      certloom.certloom.team: {name: it-team, state: absent}
+      register: delete
+
+    - name: Delete again
+      certloom.certloom.team: {name: it-team, state: absent}
+      register: delete_again
+
+    - assert:
+        that: [delete is changed, delete_again is not changed]

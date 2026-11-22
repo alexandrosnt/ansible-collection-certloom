@@ -1,0 +1,74 @@
+---
+argument_specs:
+  main:
+    short_description: Install, configure and enroll certloom-agent
+    description:
+      - Installs the certloom-agent package on Debian and Red Hat family hosts,
+        writes its configuration, enrolls hosts that are not enrolled yet and
+        starts the systemd service.
+      - The enrollment token is created on the controller with
+        M(certloom.certloom.agent_enrollment_token) and handed to the agent on
+        stdin; neither shows up in the log.
+    author: certloom maintainers (@alexandrosnt)
+    options:
+      certloom_agent_server:
+        description: HTTPS URL of the certloom agent listener.
+        type: str
+        required: true
+      certloom_agent_package_url:
+        description: URL of the C(.deb) or C(.rpm) package for the host.
+        type: str
+        default: ""
+      certloom_agent_package_file:
+        description: Path of the package on the controller, used when no URL is set.
+        type: str
+        default: ""
+      certloom_agent_package_sha256:
+        description: SHA-256 of the package, hex.
+        type: str
+        required: true
+      certloom_agent_package_gpg_check:
+        description: Check the signature of an C(.rpm) package with dnf. certloom packages are not signed yet; the checksum is checked either way.
+        type: bool
+        default: false
+      certloom_agent_name:
+        description: Agent name shown in certloom.
+        type: str
+        default: "{{ inventory_hostname }}"
+      certloom_agent_config:
+        description: Further configuration merged into config.yaml (targets, dns_solvers, cloud and so on).
+        type: dict
+        default: {}
+      certloom_agent_config_path:
+        description: Path of the agent configuration file.
+        type: str
+        default: /etc/certloom-agent/config.yaml
+      certloom_agent_state_dir:
+        description: Directory with the agent identity and keys.
+        type: str
+        default: /var/lib/certloom-agent
+      certloom_agent_enroll:
+        description: Enroll hosts that are not enrolled yet.
+        type: bool
+        default: true
+      certloom_agent_api_url:
+        description: certloom API URL for creating the token; defaults to E(CERTLOOM_ENDPOINT) on the controller.
+        type: str
+        default: ""
+      certloom_agent_api_token:
+        description: certloom API token (owner role) for creating the token; defaults to E(CERTLOOM_TOKEN) on the controller.
+        type: str
+        no_log: true
+        default: ""
+      certloom_agent_api_ca_path:
+        description: CA bundle for the certloom API, if it uses a private CA.
+        type: str
+        default: ""
+      certloom_agent_token_ttl:
+        description: Seconds the enrollment token stays valid.
+        type: int
+        default: 900
+      certloom_agent_service_enabled:
+        description: Enable and start the service, or stop and disable it.
+        type: bool
+        default: true

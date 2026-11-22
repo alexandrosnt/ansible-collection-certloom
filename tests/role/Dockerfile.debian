@@ -1,0 +1,7 @@
+FROM debian:trixie
+ARG ANSIBLE_CORE=2.22.0
+RUN apt-get update && apt-get install -y --no-install-recommends systemd systemd-sysv python3 python3-pip python3-venv python3-apt ca-certificates \
+    && python3 -m venv --system-site-packages /opt/ansible && /opt/ansible/bin/pip install --no-cache-dir "ansible-core==$ANSIBLE_CORE" \
+    && rm -rf /var/lib/apt/lists/*
+STOPSIGNAL SIGRTMIN+3
+CMD ["/sbin/init"]
